@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body{
+            background-color: rgb(25, 25, 25);
+            color: white;
+            font-size: 40px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bolder;
+        }
+        .emojis{
+            background: transparent;
+            border: 2px solid white;
+            border-radius: 50%;
+            width: 140px;
+            height: 140px;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .reset{
+            font-size: 15px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <p>Rock Paper Scissors</p>
+
+
+    <button onclick="play('rock')" class="emojis"><img src="images/rock-emoji.png" style="width: 7f0px; height: 70px; " alt=""></button>
+    <button onclick="play('paper')" class="emojis"><img src="images/paper-emoji.png" style="width: 70px; height: 70px;  "alt=""></button>
+    <button onclick="play('scissors')" class="emojis"><img src="images/scissors-emoji.png" style="width: 70px; height: 70px; " alt=""></button>
+
+    <p class="wonloss"></p>
+    <p class="moves"></p>
+    <p id="result"></p>
+    <button onclick="reset()" class="reset">Reset Score</button>
+
+
+<script>
+    
+    let score= JSON.parse(localStorage.getItem('score'))|| { wins: 0, losses: 0, ties: 0 };;
+    
+    resultdisplay=()=>{
+        document.getElementById("result").innerHTML=`Wins:${score.wins} Loss:${score.loss} Ties:${score.ties}`;
+    }
+
+    reset=()=>{
+        score.wins=0;
+        score.loss=0;
+        score.ties=0;
+        resultdisplay();
+    }
+
+    wonloss=(outcome)=>{
+        let wonloss= document.querySelector(".wonloss");
+        if(outcome=="Won"){
+            wonloss.innerHTML='You Won'
+        }
+        else if(outcome=="Loss"){
+            wonloss.innerHTML='You Loss'
+        }
+        else{
+            wonloss.innerHTML='Match tied'
+        }
+
+    }
+
+    moves=(yours,comp)=>{
+        
+        
+        let moves= document.querySelector(".moves");
+        moves.innerHTML=`You  <img src="images/${yours}-emoji.png" style="width: 7f0px; height: 70px;">, <img src="images/${comp}-emoji.png"style="width: 7f0px; height: 70px;"> Computer`;
+    }
+
+
+    play=(playermove)=>{
+        let comp;
+        let random=Math.floor(Math.random()*3);
+        console.log(random);
+        if(random==0){
+            comp='rock';
+        }
+        if (random==1) {
+            comp='scissors'
+        } 
+        if(random==2) {
+            comp='paper'
+        }
+
+
+        moves(playermove,comp);
+
+     
+        if(comp==playermove){
+            score.ties+=1;
+            // alert(`You selected ${playermove} Computer selected ${comp} TIE 
+            //  Win:${score.wins} Loss:${score.loss} Ties:${score.ties}`);
+
+             wonloss("Tie");
+
+        }
+        else if(playermove=='rock' && comp=='scissors'  || playermove=='scissors' && comp=='paper' || playermove=='paper' && comp=='rock'){
+            score.wins+=1;
+            // alert(`You selected ${playermove} Computer selected ${comp} WON 
+            //  Win:${score.wins} Loss:${score.loss} Ties:${score.ties}`);
+
+             wonloss("Won");
+        }
+        else{
+           score.loss+=1;
+            // alert(`You selected ${playermove} Computer selected ${comp} LOSS 
+            //  Win:${score.wins} Loss:${score.loss} Ties:${score.ties}`);
+             wonloss("Loss");
+        }
+
+        localStorage.setItem('score',JSON.stringify(score));
+
+
+
+        resultdisplay();
+    }
+
+    
+        
+</script>
+</body>
+</html>
