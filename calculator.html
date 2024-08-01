@@ -12,6 +12,13 @@
             color: white;
             font-size: 25px;
             font-family: Arial, Helvetica, sans-serif;
+            opacity:0.3;
+        }
+        .calculation-bold{
+            color: white;
+            font-size: 25px;
+            font-family: Arial, Helvetica, sans-serif;
+            opacity: 1;
         }
         button{
             width: 60px;
@@ -34,8 +41,8 @@
 
     </style>
 </head>
-<body>
-    <div class="calculation"></div>
+<body onkeydown="copy(event)">
+    <div class="calculation" >Press the buttons or manually type</div>
     <div class="operations">
         <p>
             <button class="gray" onclick="appendvalue('1')">1</button>
@@ -71,16 +78,45 @@ append
     <script>
 
         let display=document.querySelector('.calculation');
+
+        copy=(event)=>{
+
+            
+            if(/[0-9+\-*/.]/.test(event.key)){
+                display.classList.add('calculation-bold')
+
+                appendvalue(event.key);
+            }
+            if(event.key=='Enter'){
+                calculate();
+            }
+            if(event.key=='Backspace'){
+                display.innerHTML=display.innerHTML.slice(0,-1);
+            }
+            if(event.key=='Escape'){
+                cleardisplay();
+            }
+
+        }
         
         appendvalue=(number)=>{
+            if(display.innerHTML=="Press the buttons or manually type"){
+                display.innerHTML='';
+                display.classList.add('calculation-bold')
+
+                display.innerHTML += number;
+            }
+            else{
             display.innerHTML += number;
+            }
         }
 
         calculate=()=>{
             display.innerHTML=eval(display.innerHTML)
         }
         cleardisplay=()=>{
-            display.innerHTML='';
+            display.classList.remove('calculation-bold')
+            display.innerHTML="Press the buttons or manually type";
         }
     </script>
 </body>
